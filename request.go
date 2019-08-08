@@ -80,7 +80,6 @@ func (r *Request) readBody(reader *bufio.Reader) error {
 	return nil
 }
 
-
 func (r *Request) build() ([]byte, error) {
 	var buf bytes.Buffer
 
@@ -124,4 +123,3 @@ func (r *Request) buildHeaders() ([]byte, error) {
 func (r *Request) buildBody() ([]byte, error) {
 	return r.Body, nil
 }
-
