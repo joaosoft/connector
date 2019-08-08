@@ -1,8 +1,4 @@
-package web
-
-import (
-	"fmt"
-)
+package connector
 
 func (ctx *Context) Redirect(host string) error {
 	if ctx.Request.Client == nil {
@@ -14,13 +10,12 @@ func (ctx *Context) Redirect(host string) error {
 		ctx.Request.Client = client
 	}
 
-	url := fmt.Sprintf("%s%s", ctx.Request.Address.Url, ctx.Request.Params)
-	ctx.Request.Address = NewAddress(fmt.Sprintf("%s%s", host, url))
+	ctx.Request.Address = host
 
 	response, err := ctx.Request.Send()
 	if err != nil {
 		return err
 	}
 
-	return ctx.Response.Bytes(response.Status, response.ContentType, response.Body)
+	return ctx.Response.WithBody(response.Body)
 }

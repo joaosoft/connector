@@ -1,7 +1,6 @@
-package web
+package connector
 
 import (
-	"crypto/tls"
 	"fmt"
 	"net"
 	"time"
@@ -11,20 +10,18 @@ import (
 )
 
 type Client struct {
-	config              *ClientConfig
-	isLogExternal       bool
-	logger              logger.ILogger
-	dialer              net.Dialer
-	multiAttachmentMode MultiAttachmentMode
+	config        *ClientConfig
+	isLogExternal bool
+	logger        logger.ILogger
+	dialer        net.Dialer
 }
 
 func NewClient(options ...ClientOption) (*Client, error) {
 	config, err := NewClientConfig()
 
 	service := &Client{
-		logger:              logger.NewLogDefault("Client", logger.WarnLevel),
-		multiAttachmentMode: MultiAttachmentModeZip,
-		config:              &config.Client,
+		logger: logger.NewLogDefault("client", logger.WarnLevel),
+		config: &config.Client,
 	}
 
 	if service.isLogExternal {
@@ -57,7 +54,7 @@ func (r *Request) Send() (*Response, error) {
 
 func (c *Client) Send(request *Request) (*Response, error) {
 	startTime := time.Now()
-	fmt.Println(color.WithColor("[IN] Method[%s] Url[%s] on Start[%s]", color.FormatBold, color.ForegroundBlue, color.BackgroundBlack, request.Method, request.Address.Url, startTime))
+	fmt.Println(color.WithColor("[IN] Method[%s] Address[%s] on Start[%s]", color.FormatBold, color.ForegroundBlue, color.BackgroundBlack, request.Method, request.Address, startTime))
 
 	if c.logger.IsDebugEnabled() {
 		if request.Body != nil {
@@ -65,22 +62,12 @@ func (c *Client) Send(request *Request) (*Response, error) {
 		}
 	}
 
-	c.logger.Debugf("executing [%s] request to [%s]", request.Method, request.Address.Full)
-
-	address := request.Address.Host
-	if request.Address.Schema != SchemaNone {
-		address += fmt.Sprintf(":%s", request.Address.Schema)
-	}
+	c.logger.Debugf("executing method [%s] request to address [%s]", request.Method, request.Address)
 
 	var conn net.Conn
 	var err error
 
-	switch request.Address.Schema {
-	case SchemaHttps:
-		conn, err = tls.Dial("tcp", address, nil)
-	default:
-		conn, err = c.dialer.Dial("tcp", address)
-	}
+	conn, err = c.dialer.Dial("tcp", request.Address)
 
 	if err != nil {
 		return nil, err
@@ -101,7 +88,7 @@ func (c *Client) Send(request *Request) (*Response, error) {
 		}
 	}
 
-	fmt.Println(color.WithColor("[OUT] Status[%d] Method[%s] Url[%s] on Start[%s] Elapsed[%s]", color.FormatBold, color.ForegroundCyan, color.BackgroundBlack, response.Status, request.Method, request.Address.Url, startTime, time.Since(startTime)))
+	fmt.Println(color.WithColor("[OUT] Method[%s] Address[%s] on Start[%s] Elapsed[%s]", color.FormatBold, color.ForegroundCyan, color.BackgroundBlack, request.Method, request.Address, startTime, time.Since(startTime)))
 
 	return response, err
 }

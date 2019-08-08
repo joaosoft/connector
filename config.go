@@ -1,6 +1,6 @@
-package web
+package connector
 
 type AppConfig struct {
-	Server ServerConfig `json:"Server"`
-	Client ClientConfig `json:"Client"`
+	Server ServerConfig `json:"server"`
+	Client ClientConfig `json:"client"`
 }

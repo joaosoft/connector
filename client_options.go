@@ -1,11 +1,11 @@
-package web
+package connector
 
 import (
 	"github.com/joaosoft/logger"
 )
 
 // ClientOption ...
-type ClientOption func(builder *Client)
+type ClientOption func(client *Client)
 
 // Reconfigure ...
 func (c *Client) Reconfigure(options ...ClientOption) {
@@ -16,29 +16,22 @@ func (c *Client) Reconfigure(options ...ClientOption) {
 
 // WithClientConfiguration ...
 func WithClientConfiguration(config *ClientConfig) ClientOption {
-	return func(webclient *Client) {
-		webclient.config = config
+	return func(client *Client) {
+		client.config = config
 	}
 }
 
 // WithClientLogger ...
 func WithClientLogger(logger logger.ILogger) ClientOption {
-	return func(webclient *Client) {
-		webclient.logger = logger
-		webclient.isLogExternal = true
+	return func(client *Client) {
+		client.logger = logger
+		client.isLogExternal = true
 	}
 }
 
 // WithClientLogLevel ...
 func WithClientLogLevel(level logger.Level) ClientOption {
-	return func(webclient *Client) {
-		webclient.logger.SetLevel(level)
-	}
-}
-
-// WithClientMultiAttachmentMode ...
-func WithClientMultiAttachmentMode(mode MultiAttachmentMode) ClientOption {
-	return func(webclient *Client) {
-		webclient.multiAttachmentMode = mode
+	return func(client *Client) {
+		client.logger.SetLevel(level)
 	}
 }

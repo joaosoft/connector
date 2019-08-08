@@ -1,8 +1,7 @@
-package web
+package connector
 
 import (
 	"bufio"
-	"crypto/rand"
 	"encoding/json"
 	"io/ioutil"
 	"mime"
@@ -174,15 +173,6 @@ func GetMimeType(fileName string) (mimeType string) {
 	}
 
 	return mimeType
-}
-
-func RandomBoundary() string {
-	var buf [30]byte
-	_, err := io.ReadFull(rand.Reader, buf[:])
-	if err != nil {
-		panic(err)
-	}
-	return fmt.Sprintf("%x", buf[:])
 }
 
 func NewSimpleConfig(file string, obj interface{}) error {

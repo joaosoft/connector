@@ -2,12 +2,12 @@
   "server": {
     "address": ":9001",
     "log": {
-      "level": "debug"
+      "level": "error"
     }
   },
   "client": {
     "log": {
-      "level": "debug"
+      "level": "error"
     }
   }
 }
