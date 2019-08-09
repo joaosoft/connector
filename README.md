@@ -22,7 +22,7 @@ This examples are available in the project at [connector/examples](https://githu
 ### Usage of Server and Client
 
 #### Server
-```
+```go
 func main() {
 	// create a new server
 	w, err := connector.NewServer()
@@ -78,7 +78,7 @@ func HandlerSayHello(ctx *connector.Context) error {
 ```
 
 #### Client
-```
+```go
 func main() {
 	// create a new client
 	c, err := connector.NewClient()
@@ -114,7 +114,7 @@ func request(c *connector.Client) {
 ### Usage of Server Manager and Client Manager
 
 #### Server
-```
+```go
 func main() {
 	serverManager, err := connector.NewServerManager()
 
@@ -173,7 +173,7 @@ func HandlerSayGoodbye(ctx *connector.Context) error {
 ```
 
 #### Client
-```
+```go
 func main() {
 	// client manager
 	clientManager, err := connector.NewClientManager()
