@@ -17,11 +17,6 @@ func main() {
 }
 
 func request(c *connector.Client) {
-	request, err := c.NewRequest("sayHello", "localhost:9001")
-	if err != nil {
-		panic(err)
-	}
-
 	data := struct {
 		Name string `json:"name"`
 		Age  int    `json:"age"`
@@ -32,7 +27,9 @@ func request(c *connector.Client) {
 
 	bytes, _ := json.Marshal(data)
 
-	response, err := request.WithBody(bytes).Send()
+	response, err := c.NewRequest("sayHello", "localhost:9001").
+		WithBody(bytes).
+		Send()
 	if err != nil {
 		panic(err)
 	}

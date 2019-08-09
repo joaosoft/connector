@@ -1,6 +1,6 @@
 package connector
 
-func (c *Client) NewRequest(method string, address string) (*Request, error) {
+func (c *Client) NewRequest(method string, address string) *Request {
 	return &Request{
 		Base: Base{
 			Client:  c,
@@ -8,5 +8,5 @@ func (c *Client) NewRequest(method string, address string) (*Request, error) {
 			Address: address,
 			Headers: make(Headers),
 		},
-	}, nil
+	}
 }
