@@ -113,7 +113,7 @@ func request(c *connector.Client) {
 
 ### Usage of Server Manager and Client Manager
 
-#### Server
+#### Server Manager
 ```go
 func main() {
 	serverManager, err := connector.NewServerManager()
@@ -172,7 +172,7 @@ func HandlerSayGoodbye(ctx *connector.Context) error {
 }
 ```
 
-#### Client
+#### Client Manager
 ```go
 func main() {
 	// client manager
