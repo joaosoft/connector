@@ -1,7 +1,7 @@
 # connector
 [![Build Status](https://travis-ci.org/joaosoft/connector.svg?branch=master)](https://travis-ci.org/joaosoft/connector) | [![codecov](https://codecov.io/gh/joaosoft/connector/branch/master/graph/badge.svg)](https://codecov.io/gh/joaosoft/connector) | [![Go Report Card](https://goreportcard.com/badge/github.com/joaosoft/connector)](https://goreportcard.com/report/github.com/joaosoft/connector) | [![GoDoc](https://godoc.org/github.com/joaosoft/connector?status.svg)](https://godoc.org/github.com/joaosoft/connector)
 
-A simple and fast tcp server and client that make their communication by method, headers and body.
+A simple and fast tcp server and client that make their communication by method, headers and body with support for server manager and client manager.
 
 ###### If i miss something or you have something interesting, please be part of this project. Let me know! My contact is at the end.
 
