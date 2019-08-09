@@ -17,5 +17,6 @@ func (ctx *Context) Redirect(host string) error {
 		return err
 	}
 
-	return ctx.Response.WithBody(response.Body)
+	ctx.Response.WithBody(response.Body)
+	return nil
 }

@@ -4,12 +4,12 @@ import (
 	"fmt"
 )
 
-type ClientConfig struct {
+type ServerManagerConfig struct {
 	Log Log `json:"log"`
 }
 
-func NewClientConfig() (*AppClientConfig, error) {
-	appConfig := &AppClientConfig{}
+func NewServerManagerConfig() (*AppServerManagerConfig, error) {
+	appConfig := &AppServerManagerConfig{}
 	err := NewSimpleConfig(fmt.Sprintf("/config/app.%s.json", GetEnv()), appConfig)
 
 	return appConfig, err

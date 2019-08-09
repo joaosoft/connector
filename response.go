@@ -3,6 +3,7 @@ package connector
 import (
 	"bufio"
 	"bytes"
+	"errors"
 	"fmt"
 	"reflect"
 	"strconv"
@@ -10,9 +11,14 @@ import (
 	"time"
 )
 
-func (r *Response) WithBody(body []byte) error {
+func (r *Response) WithStatus(status Status) *Response {
+	r.Status = status
+	return r
+}
+
+func (r *Response) WithBody(body []byte) *Response {
 	r.Body = body
-	return nil
+	return r
 }
 
 func (r *Response) write() error {
@@ -42,6 +48,10 @@ func (r *Response) write() error {
 func (r *Response) buildHeaders() ([]byte, error) {
 	var buf bytes.Buffer
 
+	// header
+	buf.WriteString(fmt.Sprintf("%s %d\r\n", r.Method, r.Status))
+
+	// headers
 	r.Headers[HeaderServer] = []string{"Server"}
 	r.Headers[HeaderDate] = []string{time.Now().Format(TimeFormat)}
 
@@ -109,6 +119,18 @@ func (r *Response) readHeader(reader *bufio.Reader) error {
 	line, _, err := reader.ReadLine()
 	if err != nil {
 		return fmt.Errorf("invalid header send: %s", err)
+	}
+
+	if firstLine := bytes.SplitN(line, []byte(` `), 2); len(firstLine) < 2 {
+		return errors.New("invalid header send")
+	} else {
+		r.Method = string(firstLine[0])
+		status, err := strconv.Atoi(string(firstLine[1]))
+		if err != nil {
+			return fmt.Errorf("invalid connector response [%s]", string(line))
+		}
+
+		r.Status = Status(status)
 	}
 
 	r.Method = string(line)

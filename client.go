@@ -31,12 +31,10 @@ func NewClient(options ...ClientOption) (*Client, error) {
 	if err != nil {
 		service.logger.Error(err.Error())
 	} else {
-		level, _ := logger.ParseLevel(config.Client.Log.Level)
+		level, _ := logger.ParseLevel(service.config.Log.Level)
 		service.logger.Debugf("setting log level to %s", level)
 		service.logger.Reconfigure(logger.WithLevel(level))
 	}
-
-	service.Reconfigure(options...)
 
 	// create a new dialer to create connections
 	dialer := net.Dialer{
@@ -45,6 +43,8 @@ func NewClient(options ...ClientOption) (*Client, error) {
 		DualStack: true,
 	}
 	service.dialer = dialer
+
+	service.Reconfigure(options...)
 
 	return service, nil
 }

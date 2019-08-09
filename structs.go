@@ -37,12 +37,16 @@ type Request struct {
 
 type Response struct {
 	Base
-	Body   []byte
-	Reader io.Reader
-	Writer io.Writer
+	Body       []byte
+	Status     Status
+	Reader     io.Reader
+	Writer     io.Writer
 }
 
 type RequestHandler struct {
 	Conn    net.Conn
 	Handler HandlerFunc
 }
+
+type Servers map[string]*Server
+type Clients map[string]*Client

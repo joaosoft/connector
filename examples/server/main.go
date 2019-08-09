@@ -54,6 +54,7 @@ func HandlerSayHello(ctx *connector.Context) error {
 	json.Unmarshal(ctx.Request.Body, &data)
 	fmt.Printf("DATA: %+v", data)
 
-	return ctx.Response.WithBody([]byte("{ \"welcome\": \""+data.Name+"\" }"),
-	)
+	ctx.Response.WithBody([]byte("{ \"welcome\": \"" + data.Name + "\" }"))
+
+	return nil
 }

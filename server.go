@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/joaosoft/color"
@@ -19,6 +20,7 @@ type Server struct {
 	listener      net.Listener
 	address       string
 	errorhandler  ErrorHandler
+	started       bool
 }
 
 func NewServer(options ...ServerOption) (*Server, error) {
@@ -29,7 +31,7 @@ func NewServer(options ...ServerOption) (*Server, error) {
 		methods:     make(Methods),
 		middlewares: make([]MiddlewareFunc, 0),
 		address:     ":5000",
-		config:      &ServerConfig{},
+		config:      &config.Server,
 	}
 
 	if service.isLogExternal {
@@ -39,7 +41,7 @@ func NewServer(options ...ServerOption) (*Server, error) {
 	if err != nil {
 		service.logger.Error(err.Error())
 	} else {
-		level, _ := logger.ParseLevel(config.Client.Log.Level)
+		level, _ := logger.ParseLevel(service.config.Log.Level)
 		service.logger.Debugf("setting log level to %s", level)
 		service.logger.Reconfigure(logger.WithLevel(level))
 	}
@@ -47,7 +49,7 @@ func NewServer(options ...ServerOption) (*Server, error) {
 	service.Reconfigure(options...)
 
 	if config.Server.Address != "" {
-		service.address = config.Server.Address
+		service.address = service.config.Address
 	}
 
 	service.errorhandler = service.DefaultErrorHandler
@@ -59,17 +61,13 @@ func (w *Server) AddMiddlewares(middlewares ...MiddlewareFunc) {
 	w.middlewares = append(w.middlewares, middlewares...)
 }
 
-func (w *Server) AddMethod(method string, handler HandlerFunc, middleware ...MiddlewareFunc) error {
+func (w *Server) AddMethod(method string, handler HandlerFunc, middleware ...MiddlewareFunc) {
 	w.methods[method] = NewMethod(method, handler, middleware...)
-
-	return nil
 }
 
 func (w *Server) AddMethods(methods ...*Method) error {
 	for _, r := range methods {
-		if err := w.AddMethod(r.Method, r.Handler, r.Middlewares...); err != nil {
-			return err
-		}
+		w.AddMethod(r.Method, r.Handler, r.Middlewares...)
 	}
 	return nil
 }
@@ -77,42 +75,6 @@ func (w *Server) AddMethods(methods ...*Method) error {
 func (w *Server) SetErrorHandler(handler ErrorHandler) error {
 	w.errorhandler = handler
 	return nil
-}
-
-func (w *Server) Start() error {
-	w.logger.Debug("executing Start")
-	var err error
-
-	w.listener, err = net.Listen("tcp", w.address)
-	if err != nil {
-		w.logger.Errorf("error connecting to %s: %s", w.address, err)
-		return err
-	}
-
-	if w.address == ":0" {
-		split := strings.Split(w.listener.Addr().String(), ":")
-		w.address = fmt.Sprintf(":%s", split[len(split)-1])
-	}
-
-	fmt.Println(color.WithColor("Connector server started on [%s]", color.FormatBold, color.ForegroundRed, color.BackgroundBlack, w.address))
-
-	for {
-		conn, err := w.listener.Accept()
-		w.logger.Info("accepted connection")
-		if err != nil {
-			w.logger.Errorf("error accepting connection: %s", err)
-			continue
-		}
-
-		if conn == nil {
-			w.logger.Error("the connection isn't initialized")
-			continue
-		}
-
-		go w.handleConnection(conn)
-	}
-
-	return err
 }
 
 func (w *Server) handleConnection(conn net.Conn) (err error) {
@@ -205,24 +167,90 @@ done:
 	return nil
 }
 
-func (w *Server) Stop() error {
+func (w *Server) GetMethod(method string) (*Method, error) {
+	if m, ok := w.methods[method]; ok {
+		return m, nil
+	}
+
+	return nil, ErrorMethodNotFound
+}
+
+func emptyHandler(ctx *Context) error {
+	return nil
+}
+
+
+func (w *Server) Start(waitGroup ...*sync.WaitGroup) error {
+	var wg *sync.WaitGroup
+
+	if len(waitGroup) == 0 {
+		wg = &sync.WaitGroup{}
+		wg.Add(1)
+	} else {
+		wg = waitGroup[0]
+	}
+
+	w.logger.Debug("executing Start")
+	var err error
+
+	w.listener, err = net.Listen("tcp", w.address)
+	if err != nil {
+		w.logger.Errorf("error connecting to %s: %s", w.address, err)
+		return err
+	}
+
+	if w.address == ":0" {
+		split := strings.Split(w.listener.Addr().String(), ":")
+		w.address = fmt.Sprintf(":%s", split[len(split)-1])
+	}
+
+	fmt.Println(color.WithColor("Connector server started on [%s]", color.FormatBold, color.ForegroundRed, color.BackgroundBlack, w.address))
+
+	w.started = true
+	wg.Done()
+
+	for {
+		conn, err := w.listener.Accept()
+		w.logger.Info("accepted connection")
+		if err != nil {
+			w.logger.Errorf("error accepting connection: %s", err)
+			continue
+		}
+
+		if conn == nil {
+			w.logger.Error("the connection isn't initialized")
+			continue
+		}
+
+		go w.handleConnection(conn)
+	}
+
+	return err
+}
+
+func (w *Server) Started() bool {
+	return w.started
+}
+
+func (w *Server) Stop(waitGroup ...*sync.WaitGroup) error {
+	var wg *sync.WaitGroup
+
+	if len(waitGroup) == 0 {
+		wg = &sync.WaitGroup{}
+		wg.Add(1)
+	} else {
+		wg = waitGroup[0]
+	}
+
+	defer wg.Done()
+
 	w.logger.Debug("executing Stop")
 
 	if w.listener != nil {
 		w.listener.Close()
 	}
 
-	return nil
-}
+	w.started = false
 
-func (w *Server) GetMethod(method string) (*Method, error) {
-	if m, ok := w.methods[method]; ok {
-		return m, nil
-	}
-
-	return nil, ErrorNotFound
-}
-
-func emptyHandler(ctx *Context) error {
 	return nil
 }
