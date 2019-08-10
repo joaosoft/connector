@@ -10,6 +10,23 @@ A simple and fast tcp server and client that make their communication by method,
 * Headers
 * Middlewares
 
+## With response status
+
+|Constant             | Value  |
+|---------------------|--------|
+|StatusOk             |0       |
+|StatusCreated        |1       |
+|StatusAccepted       |2       |
+|StatusNoContent      |3       |
+|StatusFound          |4       |
+|StatusBadRequest     |5       |
+|StatusUnauthorized   |6       |
+|StatusNotFound       |7       |
+|StatusConflict       |8       |
+|StatusInternalError  |9       |
+|StatusBadGateway     |10      |
+|StatusUnavailable    |11      |
+|StatusTimeout        |12      |
 
 >### Go
 ```
