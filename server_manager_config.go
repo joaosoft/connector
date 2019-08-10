@@ -5,7 +5,12 @@ import (
 )
 
 type ServerManagerConfig struct {
+	Services map[string]*ServerService `json:"services"`
 	Log Log `json:"log"`
+}
+
+type ServerService struct {
+	Address string `json:"address"`
 }
 
 func NewServerManagerConfig() (*AppServerManagerConfig, error) {

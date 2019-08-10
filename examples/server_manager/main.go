@@ -10,14 +10,14 @@ func main() {
 	serverManager, err := connector.NewServerManager()
 
 	// server 1
-	server1, err := connector.NewServer(connector.WithServerConfiguration(&connector.ServerConfig{Address: ":9001"}))
+	server1, err := connector.NewServer()
 	if err != nil {
 		panic(err)
 	}
 	server1.AddMethod("sayHello", HandlerSayHello)
 
 	// server 2
-	server2, err := connector.NewServer(connector.WithServerConfiguration(&connector.ServerConfig{Address: ":9002"}))
+	server2, err := connector.NewServer()
 	if err != nil {
 		panic(err)
 	}

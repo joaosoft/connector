@@ -19,6 +19,49 @@ go get github.com/joaosoft/connector
 ## Usage 
 This examples are available in the project at [connector/examples](https://github.com/joaosoft/connector/tree/master/examples)
 
+### Configuration
+```javascript
+{
+  "server": {
+    "address": ":9001",
+    "log": {
+      "level": "error"
+    }
+  },
+  "client": {
+    "log": {
+      "level": "error"
+    }
+  },
+  "server_manager": {
+    "services": {
+      "service_one": {
+        "address": ":9001"
+      },
+      "service_two": {
+        "address": ":9002"
+      }
+    },
+    "log": {
+      "level": "error"
+    }
+  },
+  "client_manager": {
+    "services": {
+      "service_one": {
+        "address": ":9001"
+      },
+      "service_two": {
+        "address": ":9002"
+      }
+    },
+    "log": {
+      "level": "error"
+    }
+  }
+}
+```
+
 ### Usage of Server and Client
 
 #### Server
@@ -118,14 +161,14 @@ func main() {
 	serverManager, err := connector.NewServerManager()
 
 	// server 1
-	server1, err := connector.NewServer(connector.WithServerConfiguration(&connector.ServerConfig{Address: ":9001"}))
+	server1, err := connector.NewServer()
 	if err != nil {
 		panic(err)
 	}
 	server1.AddMethod("sayHello", HandlerSayHello)
 
 	// server 2
-	server2, err := connector.NewServer(connector.WithServerConfiguration(&connector.ServerConfig{Address: ":9002"}))
+	server2, err := connector.NewServer()
 	if err != nil {
 		panic(err)
 	}

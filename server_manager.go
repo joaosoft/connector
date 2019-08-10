@@ -48,6 +48,11 @@ func NewServerManager(options ...ServerManagerOption) (*ServerManager, error) {
 
 func (sm *ServerManager) Register(service string, server *Server) *ServerManager {
 	server.AddMethod("alive", handleAlive)
+
+	if config, ok := sm.config.Services[service]; ok {
+		server.address = config.Address
+	}
+
 	sm.servers[service] = server
 	return sm
 }

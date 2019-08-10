@@ -11,6 +11,14 @@
     }
   },
   "server_manager": {
+    "services": {
+      "service_one": {
+        "address": ":9001"
+      },
+      "service_two": {
+        "address": ":9002"
+      }
+    },
     "log": {
       "level": "error"
     }
