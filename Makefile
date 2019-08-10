@@ -1,10 +1,3 @@
-run:
-	go run ./examples/main.go
-
-build:
-	mkdir -p bin/
-	CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -a -installsuffix cgo -o bin/dependency main/main.go
-
 fmt:
 	go fmt ./...
 
