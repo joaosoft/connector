@@ -27,9 +27,7 @@ func request(c *connector.Client) {
 
 	bytes, _ := json.Marshal(data)
 
-	response, err := c.NewRequest("sayHello", "localhost:9001").
-		WithBody(bytes).
-		Send()
+	response, err := c.Invoke("sayHello", "localhost:9001", nil, bytes)
 	if err != nil {
 		panic(err)
 	}

@@ -100,15 +100,14 @@ func request(c *connector.Client) {
 
 	bytes, _ := json.Marshal(data)
 
-	response, err := c.NewRequest("sayHello", "localhost:9001").
-		WithBody(bytes).
-		Send()
+	response, err := c.Invoke("sayHello", "localhost:9001", nil, bytes)
 	if err != nil {
 		panic(err)
 	}
 
 	fmt.Printf("%+v\n", string(response.Body))
 }
+
 ```
 
 ### Usage of Server Manager and Client Manager
@@ -195,14 +194,14 @@ func main() {
 	}
 
 	// invoke service_one
-	response, err := clientManager.Invoke("service_one", "sayHello", bytes)
+	response, err := clientManager.Invoke("service_one", "sayHello", nil, bytes)
 	if err != nil {
 		panic(err)
 	}
 	fmt.Printf("service_one response: %+v\n", string(response.Body))
 
 	// invoke service_two
-	response, err = clientManager.Invoke("service_two", "sayGoodbye", bytes)
+	response, err = clientManager.Invoke("service_two", "sayGoodbye", nil, bytes)
 	if err != nil {
 		panic(err)
 	}

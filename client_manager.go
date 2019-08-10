@@ -62,7 +62,7 @@ func (cm *ClientManager) checkAlive() error {
 	return nil
 }
 
-func (cm *ClientManager) Invoke(service, method string, body ...[]byte) (*Response, error) {
+func (cm *ClientManager) Invoke(service, method string, headers Headers, body ...[]byte) (*Response, error) {
 	var clientConf *ClientService
 	var ok bool
 
@@ -70,16 +70,5 @@ func (cm *ClientManager) Invoke(service, method string, body ...[]byte) (*Respon
 		return nil, ErrorConfigurationNotFound
 	}
 
-	request := cm.client.NewRequest(method, clientConf.Address)
-
-	if len(body) > 0 {
-		request.WithBody(body[0])
-	}
-
-	response, err := request.Send()
-	if err != nil {
-		return nil, err
-	}
-
-	return response, nil
+	return cm.client.Invoke(method, clientConf.Address, headers, body...)
 }

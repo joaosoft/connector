@@ -27,14 +27,14 @@ func main() {
 	}
 
 	// invoke service_one
-	response, err := clientManager.Invoke("service_one", "sayHello", bytes)
+	response, err := clientManager.Invoke("service_one", "sayHello", nil, bytes)
 	if err != nil {
 		panic(err)
 	}
 	fmt.Printf("service_one response: %+v\n", string(response.Body))
 
 	// invoke service_two
-	response, err = clientManager.Invoke("service_two", "sayGoodbye", bytes)
+	response, err = clientManager.Invoke("service_two", "sayGoodbye", nil, bytes)
 	if err != nil {
 		panic(err)
 	}

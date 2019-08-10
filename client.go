@@ -48,6 +48,18 @@ func NewClient(options ...ClientOption) (*Client, error) {
 
 	return service, nil
 }
+
+func (c *Client) Invoke(method, address string, headers Headers, body ...[]byte) (*Response, error) {
+	request := c.NewRequest(method, address, headers)
+
+	if len(body) > 0 {
+		request.WithBody(body[0])
+	}
+
+	return request.Send()
+}
+
+
 func (r *Request) Send() (*Response, error) {
 	return r.Client.Send(r)
 }
