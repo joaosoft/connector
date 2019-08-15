@@ -3,7 +3,6 @@ package connector
 import (
 	"io"
 	"net"
-	"reflect"
 	"time"
 )
 
@@ -51,7 +50,3 @@ type RequestHandler struct {
 
 type Servers map[string]*Server
 type Clients map[string]*Client
-
-var (
-	HandlerType = reflect.TypeOf((*HandlerFunc)(nil)).Elem()
-)

@@ -79,7 +79,9 @@ func (w *Server) Implement(implementation interface{}, middleware ...MiddlewareF
 		method := w.implementation.Method(i)
 		methodType := implementationType.Method(i)
 
-		w.methods[methodType.Name] = NewMethod(methodType.Name, method.Interface().(func(ctx *Context) error), middleware...)
+		if value, ok := method.Interface().(func(ctx *Context) error); ok {
+			w.methods[methodType.Name] = NewMethod(methodType.Name, value, middleware...)
+		}
 	}
 }
 
