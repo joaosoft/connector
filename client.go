@@ -98,7 +98,7 @@ func (c *Client) Send(request *Request) (*Response, error) {
 		}
 	}
 
-	fmt.Println(color.WithColor("Method[%s] Address[%s] on Start[%s] Elapsed[%s]", color.FormatBold, color.ForegroundCyan, color.BackgroundBlack, request.Method, request.Address, startTime, time.Since(startTime)))
+	fmt.Println(color.WithColor("Method[%s] Address[%s] on Start[%s] Elapsed[%s]", color.FormatBold, color.ForegroundCyan, color.BackgroundBlack, request.Method, request.Address, startTime.Format(TimeFormat), time.Since(startTime)))
 
 	return response, err
 }

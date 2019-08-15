@@ -3,5 +3,6 @@ package connector
 import "time"
 
 const (
-	TimeFormat = time.RFC3339
+	HeaderTimeFormat = time.RFC3339
+	TimeFormat       = time.RFC3339
 )

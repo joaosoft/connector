@@ -109,7 +109,7 @@ func (r *Request) buildHeaders() ([]byte, error) {
 	if _, ok := r.Headers[HeaderUserAgent]; !ok {
 		r.Headers[HeaderUserAgent] = []string{"client"}
 	}
-	r.Headers[HeaderDate] = []string{time.Now().Format(TimeFormat)}
+	r.Headers[HeaderDate] = []string{time.Now().Format(HeaderTimeFormat)}
 
 	for key, value := range r.Headers {
 		buf.WriteString(fmt.Sprintf("%s: %s\r\n", key, value[0]))
