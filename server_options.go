@@ -14,6 +14,13 @@ func (w *Server) Reconfigure(options ...ServerOption) {
 	}
 }
 
+// WithServerName ...
+func WithServerName(name string) ServerOption {
+	return func(server *Server) {
+		server.name = name
+	}
+}
+
 // WithServerConfiguration ...
 func WithServerConfiguration(config *ServerConfig) ServerOption {
 	return func(server *Server) {
@@ -39,6 +46,6 @@ func WithServerLogLevel(level logger.Level) ServerOption {
 // WithServerAddress ...
 func WithServerAddress(address string) ServerOption {
 	return func(server *Server) {
-		server.address = address
+		server.config.Address = address
 	}
 }

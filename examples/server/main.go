@@ -2,6 +2,7 @@ package main
 
 import (
 	"connector"
+	"connector/examples/server/impl"
 	"encoding/json"
 	"fmt"
 )
@@ -15,9 +16,8 @@ func main() {
 
 	w.AddMiddlewares(MyMiddlewareOne(), MyMiddlewareTwo())
 
-	w.AddMethods(
-		connector.NewMethod("sayHello", HandlerSayHello),
-	)
+	w.AddMethod("sayHello", HandlerSayHello)
+	w.Implement(&impl.DummyTest{})
 
 	// start the server
 	if err := w.Start(); err != nil {
@@ -44,7 +44,7 @@ func MyMiddlewareTwo() connector.MiddlewareFunc {
 }
 
 func HandlerSayHello(ctx *connector.Context) error {
-	fmt.Println("HELLO I'M THE HELLO HANDER FOR POST")
+	fmt.Println("HELLO I'M THE HELLO HANDER FOR SayHello")
 
 	data := struct {
 		Name string `json:"name"`

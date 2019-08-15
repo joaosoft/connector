@@ -11,11 +11,11 @@
     }
   },
   "server_manager": {
-    "services": {
-      "service_one": {
+    "servers": {
+      "server_one": {
         "address": ":9001"
       },
-      "service_two": {
+      "server_two": {
         "address": ":9002"
       }
     },
@@ -24,11 +24,11 @@
     }
   },
   "client_manager": {
-    "services": {
-      "service_one": {
+    "servers": {
+      "server_one": {
         "address": ":9001"
       },
-      "service_two": {
+      "server_two": {
         "address": ":9002"
       }
     },

@@ -3,6 +3,7 @@ package connector
 import (
 	"io"
 	"net"
+	"reflect"
 	"time"
 )
 
@@ -37,10 +38,10 @@ type Request struct {
 
 type Response struct {
 	Base
-	Body       []byte
-	Status     Status
-	Reader     io.Reader
-	Writer     io.Writer
+	Body   []byte
+	Status Status
+	Reader io.Reader
+	Writer io.Writer
 }
 
 type RequestHandler struct {
@@ -50,3 +51,7 @@ type RequestHandler struct {
 
 type Servers map[string]*Server
 type Clients map[string]*Client
+
+var (
+	HandlerType = reflect.TypeOf((*HandlerFunc)(nil)).Elem()
+)

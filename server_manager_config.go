@@ -5,8 +5,8 @@ import (
 )
 
 type ServerManagerConfig struct {
-	Services map[string]*ServerService `json:"services"`
-	Log Log `json:"log"`
+	Servers map[string]*ServerService `json:"Servers"`
+	Log     Log                       `json:"log"`
 }
 
 type ServerService struct {

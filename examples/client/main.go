@@ -31,6 +31,11 @@ func request(c *connector.Client) {
 	if err != nil {
 		panic(err)
 	}
+	fmt.Printf("%+v\n", string(response.Body))
 
+	response, err = c.Invoke("Test", "localhost:9001", nil, bytes)
+	if err != nil {
+		panic(err)
+	}
 	fmt.Printf("%+v\n", string(response.Body))
 }

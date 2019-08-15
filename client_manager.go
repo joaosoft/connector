@@ -48,7 +48,7 @@ func NewClientManager(options ...ClientManagerOption) (*ClientManager, error) {
 }
 
 func (cm *ClientManager) checkAlive() error {
-	for _, service := range cm.config.Services {
+	for _, service := range cm.config.Servers {
 		response, err := cm.client.NewRequest("alive", service.Address).Send()
 		if err != nil {
 			return err
@@ -66,7 +66,7 @@ func (cm *ClientManager) Invoke(service, method string, headers Headers, body ..
 	var clientConf *ClientService
 	var ok bool
 
-	if clientConf, ok = cm.config.Services[service]; !ok {
+	if clientConf, ok = cm.config.Servers[service]; !ok {
 		return nil, ErrorConfigurationNotFound
 	}
 

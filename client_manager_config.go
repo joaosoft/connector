@@ -5,8 +5,8 @@ import (
 )
 
 type ClientManagerConfig struct {
-	Services map[string]*ClientService `json:"services"`
-	Log      Log                       `json:"log"`
+	Servers map[string]*ClientService `json:"Servers"`
+	Log     Log                       `json:"log"`
 }
 
 type ClientService struct {

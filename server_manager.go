@@ -46,14 +46,14 @@ func NewServerManager(options ...ServerManagerOption) (*ServerManager, error) {
 	return service, nil
 }
 
-func (sm *ServerManager) Register(service string, server *Server) *ServerManager {
+func (sm *ServerManager) Register(server *Server) *ServerManager {
 	server.AddMethod("alive", handleAlive)
 
-	if config, ok := sm.config.Services[service]; ok {
-		server.address = config.Address
+	if config, ok := sm.config.Servers[server.name]; ok {
+		server.config.Address = config.Address
 	}
 
-	sm.servers[service] = server
+	sm.servers[server.name] = server
 	return sm
 }
 
@@ -112,7 +112,7 @@ func handleAlive(ctx *Context) error {
 		return err
 	}
 
-	ctx.Response.WithBody(byts).withStatus(StatusOk)
+	ctx.Response.WithBody(byts)
 
 	return nil
 }

@@ -3,6 +3,7 @@ package connector
 import (
 	"fmt"
 	"net"
+	"reflect"
 	"strings"
 	"sync"
 	"time"
@@ -12,25 +13,26 @@ import (
 )
 
 type Server struct {
-	config        *ServerConfig
-	isLogExternal bool
-	logger        logger.ILogger
-	methods       Methods
-	middlewares   []MiddlewareFunc
-	listener      net.Listener
-	address       string
-	errorhandler  ErrorHandler
-	started       bool
+	name           string
+	config         *ServerConfig
+	isLogExternal  bool
+	logger         logger.ILogger
+	methods        Methods
+	implementation reflect.Value
+	middlewares    []MiddlewareFunc
+	listener       net.Listener
+	errorHandler   ErrorHandler
+	started        bool
 }
 
 func NewServer(options ...ServerOption) (*Server, error) {
 	config, err := NewServerConfig()
 
 	service := &Server{
+		name:        "server",
 		logger:      logger.NewLogDefault("server", logger.WarnLevel),
 		methods:     make(Methods),
 		middlewares: make([]MiddlewareFunc, 0),
-		address:     ":5000",
 		config:      &config.Server,
 	}
 
@@ -48,11 +50,15 @@ func NewServer(options ...ServerOption) (*Server, error) {
 
 	service.Reconfigure(options...)
 
-	if config.Server.Address != "" {
-		service.address = service.config.Address
+	if config.Server.Address == "" {
+		port, err := GetFreePort()
+		if err != nil {
+			return nil, err
+		}
+		config.Server.Address = fmt.Sprintf(":%d", port)
 	}
 
-	service.errorhandler = service.DefaultErrorHandler
+	service.errorHandler = service.DefaultErrorHandler
 
 	return service, nil
 }
@@ -65,6 +71,18 @@ func (w *Server) AddMethod(method string, handler HandlerFunc, middleware ...Mid
 	w.methods[method] = NewMethod(method, handler, middleware...)
 }
 
+func (w *Server) Implement(implementation interface{}, middleware ...MiddlewareFunc) {
+	w.implementation = reflect.ValueOf(implementation)
+	implementationType := reflect.TypeOf(implementation)
+
+	for i := 0; i < implementationType.NumMethod(); i++ {
+		method := w.implementation.Method(i)
+		methodType := implementationType.Method(i)
+
+		w.methods[methodType.Name] = NewMethod(methodType.Name, method.Interface().(func(ctx *Context) error), middleware...)
+	}
+}
+
 func (w *Server) AddMethods(methods ...*Method) error {
 	for _, r := range methods {
 		w.AddMethod(r.Method, r.Handler, r.Middlewares...)
@@ -73,7 +91,7 @@ func (w *Server) AddMethods(methods ...*Method) error {
 }
 
 func (w *Server) SetErrorHandler(handler ErrorHandler) error {
-	w.errorhandler = handler
+	w.errorHandler = handler
 	return nil
 }
 
@@ -119,7 +137,7 @@ func (w *Server) handleConnection(conn net.Conn) (err error) {
 	handlerRoute = emptyHandler
 	handlerRoute = func(next HandlerFunc) HandlerFunc {
 		return func(ctx *Context) error {
-			if err := method.Handler(ctx); err != nil {
+			if err = method.Handler(ctx); err != nil {
 				return err
 			}
 
@@ -152,7 +170,7 @@ func (w *Server) handleConnection(conn net.Conn) (err error) {
 
 done:
 	if err != nil {
-		if er := w.errorhandler(ctx, err); er != nil {
+		if er := w.errorHandler(ctx, err); er != nil {
 			w.logger.Errorf("error writing error: [error: %s] %s", err, er)
 		}
 	}
@@ -179,7 +197,6 @@ func emptyHandler(ctx *Context) error {
 	return nil
 }
 
-
 func (w *Server) Start(waitGroup ...*sync.WaitGroup) error {
 	var wg *sync.WaitGroup
 
@@ -193,18 +210,18 @@ func (w *Server) Start(waitGroup ...*sync.WaitGroup) error {
 	w.logger.Debug("executing Start")
 	var err error
 
-	w.listener, err = net.Listen("tcp", w.address)
+	w.listener, err = net.Listen("tcp", w.config.Address)
 	if err != nil {
-		w.logger.Errorf("error connecting to %s: %s", w.address, err)
+		w.logger.Errorf("error connecting to %s: %s", w.config.Address, err)
 		return err
 	}
 
-	if w.address == ":0" {
+	if w.config.Address == ":0" {
 		split := strings.Split(w.listener.Addr().String(), ":")
-		w.address = fmt.Sprintf(":%s", split[len(split)-1])
+		w.config.Address = fmt.Sprintf(":%s", split[len(split)-1])
 	}
 
-	fmt.Println(color.WithColor("Connector server started on [%s]", color.FormatBold, color.ForegroundRed, color.BackgroundBlack, w.address))
+	fmt.Println(color.WithColor("Connector server started on [%s]", color.FormatBold, color.ForegroundRed, color.BackgroundBlack, w.config.Address))
 
 	w.started = true
 	wg.Done()

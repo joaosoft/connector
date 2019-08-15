@@ -10,22 +10,22 @@ func main() {
 	serverManager, err := connector.NewServerManager()
 
 	// server 1
-	server1, err := connector.NewServer()
+	server1, err := connector.NewServer(connector.WithServerName("server_one"))
 	if err != nil {
 		panic(err)
 	}
 	server1.AddMethod("sayHello", HandlerSayHello)
 
 	// server 2
-	server2, err := connector.NewServer()
+	server2, err := connector.NewServer(connector.WithServerName("server_two"))
 	if err != nil {
 		panic(err)
 	}
 	server2.AddMethod("sayGoodbye", HandlerSayGoodbye)
 
 	// server manager
-	serverManager.Register("service_one", server1)
-	serverManager.Register("service_two", server2)
+	serverManager.Register(server1)
+	serverManager.Register(server2)
 
 	serverManager.Start()
 }

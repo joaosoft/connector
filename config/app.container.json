@@ -9,5 +9,31 @@
     "log": {
       "level": "error"
     }
+  },
+  "server_manager": {
+    "servers": {
+      "server_one": {
+        "address": ":9001"
+      },
+      "server_two": {
+        "address": ":9002"
+      }
+    },
+    "log": {
+      "level": "error"
+    }
+  },
+  "client_manager": {
+    "servers": {
+      "server_one": {
+        "address": ":9001"
+      },
+      "server_two": {
+        "address": ":9002"
+      }
+    },
+    "log": {
+      "level": "error"
+    }
   }
 }
