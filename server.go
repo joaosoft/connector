@@ -114,8 +114,6 @@ func (w *Server) handleConnection(conn net.Conn) (err error) {
 		return err
 	}
 
-	fmt.Println(color.WithColor("[IN] IP[%s] Method[%s] Start[%s]", color.FormatBold, color.ForegroundBlue, color.BackgroundBlack, request.IP, request.Method, startTime))
-
 	if w.logger.IsDebugEnabled() {
 		if request.Body != nil {
 			w.logger.Infof("[REQUEST BODY] [%s]", string(request.Body))
@@ -182,7 +180,7 @@ done:
 		w.logger.Errorf("error writing response: [%s]", err)
 	}
 
-	fmt.Println(color.WithColor("[OUT] IP[%s] Method[%s] Start[%s] Elapsed[%s]", color.FormatBold, color.ForegroundCyan, color.BackgroundBlack, ctx.Request.IP, ctx.Request.Method, startTime, time.Since(startTime)))
+	fmt.Println(color.WithColor("Server[%s] IP[%s] Method[%s] Start[%s] Elapsed[%s]", color.FormatBold, color.ForegroundCyan, color.BackgroundBlack, w.name, ctx.Request.IP, ctx.Request.Method, startTime.Format(TimeFormat), time.Since(startTime)))
 
 	return nil
 }
@@ -223,7 +221,7 @@ func (w *Server) Start(waitGroup ...*sync.WaitGroup) error {
 		w.config.Address = fmt.Sprintf(":%s", split[len(split)-1])
 	}
 
-	fmt.Println(color.WithColor("Connector server started on [%s]", color.FormatBold, color.ForegroundRed, color.BackgroundBlack, w.config.Address))
+	fmt.Println(color.WithColor("⇨ Connector server [%s] started on [%s]", color.FormatBold, color.ForegroundRed, color.BackgroundBlack, w.name, w.config.Address))
 
 	w.started = true
 	wg.Done()

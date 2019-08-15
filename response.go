@@ -52,7 +52,7 @@ func (r *Response) buildHeaders() ([]byte, error) {
 	buf.WriteString(fmt.Sprintf("%s %d\r\n", r.Method, r.Status))
 
 	// headers
-	r.Headers[HeaderServer] = []string{"Server"}
+	r.Headers[HeaderServer] = []string{r.Server.name}
 	r.Headers[HeaderDate] = []string{time.Now().Format(TimeFormat)}
 
 	for key, value := range r.Headers {

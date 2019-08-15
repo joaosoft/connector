@@ -59,14 +59,12 @@ func (c *Client) Invoke(method, address string, headers Headers, body ...[]byte)
 	return request.Send()
 }
 
-
 func (r *Request) Send() (*Response, error) {
 	return r.Client.Send(r)
 }
 
 func (c *Client) Send(request *Request) (*Response, error) {
 	startTime := time.Now()
-	fmt.Println(color.WithColor("[IN] Method[%s] Address[%s] on Start[%s]", color.FormatBold, color.ForegroundBlue, color.BackgroundBlack, request.Method, request.Address, startTime))
 
 	if c.logger.IsDebugEnabled() {
 		if request.Body != nil {
@@ -100,7 +98,7 @@ func (c *Client) Send(request *Request) (*Response, error) {
 		}
 	}
 
-	fmt.Println(color.WithColor("[OUT] Method[%s] Address[%s] on Start[%s] Elapsed[%s]", color.FormatBold, color.ForegroundCyan, color.BackgroundBlack, request.Method, request.Address, startTime, time.Since(startTime)))
+	fmt.Println(color.WithColor("Method[%s] Address[%s] on Start[%s] Elapsed[%s]", color.FormatBold, color.ForegroundCyan, color.BackgroundBlack, request.Method, request.Address, startTime, time.Since(startTime)))
 
 	return response, err
 }
