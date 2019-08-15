@@ -41,7 +41,7 @@ func HandlerSayHello(ctx *connector.Context) error {
 	json.Unmarshal(ctx.Request.Body, &data)
 	fmt.Printf("DATA: %+v", data)
 
-	ctx.Response.WithBody([]byte("{ \"welcome\": \"" + data.Name + "\" }")).WithStatus(connector.StatusAccepted)
+	ctx.Response.WithBody([]byte("{ \"welcome\": \"" + data.Name + "\" }"))
 
 	return nil
 }
@@ -57,7 +57,7 @@ func HandlerSayGoodbye(ctx *connector.Context) error {
 	json.Unmarshal(ctx.Request.Body, &data)
 	fmt.Printf("DATA: %+v", data)
 
-	ctx.Response.WithBody([]byte("{ \"goodbye\": \"" + data.Name + "\" }")).WithStatus(connector.StatusAccepted)
+	ctx.Response.WithBody([]byte("{ \"goodbye\": \"" + data.Name + "\" }"))
 
 	return nil
 }

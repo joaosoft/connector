@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-func (r *Response) WithStatus(status Status) *Response {
+func (r *Response) withStatus(status Status) *Response {
 	r.Status = status
 	return r
 }

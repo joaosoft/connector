@@ -112,7 +112,7 @@ func handleAlive(ctx *Context) error {
 		return err
 	}
 
-	ctx.Response.WithBody(byts).WithStatus(StatusOk)
+	ctx.Response.WithBody(byts).withStatus(StatusOk)
 
 	return nil
 }

@@ -15,6 +15,7 @@ func (c *Client) NewResponse(method string, address string, conn net.Conn) (*Res
 			Headers: make(Headers),
 			conn:    conn,
 		},
+		Status: StatusOk,
 		Reader: conn.(io.Reader),
 	}
 

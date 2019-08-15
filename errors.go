@@ -14,7 +14,7 @@ var (
 func (w *Server) DefaultErrorHandler(ctx *Context, err error) error {
 	w.logger.Infof("handling error: %s", err)
 
-	ctx.Response.WithBody([]byte(err.Error())).WithStatus(StatusInternalError)
+	ctx.Response.WithBody([]byte(err.Error())).withStatus(StatusError)
 
 	return nil
 }
