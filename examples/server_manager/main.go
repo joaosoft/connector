@@ -1,9 +1,9 @@
 package main
 
 import (
-	"connector"
 	"encoding/json"
 	"fmt"
+	"github.com/joaosoft/connector"
 )
 
 func main() {

@@ -1,10 +1,10 @@
 package main
 
 import (
-	"connector"
-	"connector/examples/server/impl"
 	"encoding/json"
 	"fmt"
+	"github.com/joaosoft/connector"
+	"github.com/joaosoft/connector/examples/server/impl"
 )
 
 func main() {

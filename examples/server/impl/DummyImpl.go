@@ -1,9 +1,9 @@
 package impl
 
 import (
-	"connector"
 	"encoding/json"
 	"fmt"
+	"github.com/joaosoft/connector"
 )
 
 type DummyTest struct{}
