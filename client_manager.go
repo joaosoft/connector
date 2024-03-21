@@ -21,7 +21,7 @@ func NewClientManager(options ...ClientManagerOption) (*ClientManager, error) {
 	config, err := NewClientManagerConfig()
 
 	service := &ClientManager{
-		logger: logger.NewLogDefault("ClientManager", logger.WarnLevel),
+		logger: logger.NewLogDefault("ClientManager", logger.LevelWarn),
 		client: client,
 		config: &config.ClientManager,
 	}

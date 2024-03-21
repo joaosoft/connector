@@ -23,7 +23,7 @@ func NewServerManager(options ...ServerManagerOption) (*ServerManager, error) {
 	pm := manager.NewManager()
 
 	service := &ServerManager{
-		logger:  logger.NewLogDefault("ServerManager", logger.WarnLevel),
+		logger:  logger.NewLogDefault("ServerManager", logger.LevelWarn),
 		servers: make(Servers),
 		pm:      pm,
 		config:  &config.ServerManager,

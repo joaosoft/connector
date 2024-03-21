@@ -30,7 +30,7 @@ func NewServer(options ...ServerOption) (*Server, error) {
 
 	service := &Server{
 		name:        "server",
-		logger:      logger.NewLogDefault("server", logger.WarnLevel),
+		logger:      logger.NewLogDefault("server", logger.LevelWarn),
 		methods:     make(Methods),
 		middlewares: make([]MiddlewareFunc, 0),
 		config:      &config.Server,

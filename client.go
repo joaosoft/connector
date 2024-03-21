@@ -20,7 +20,7 @@ func NewClient(options ...ClientOption) (*Client, error) {
 	config, err := NewClientConfig()
 
 	service := &Client{
-		logger: logger.NewLogDefault("client", logger.WarnLevel),
+		logger: logger.NewLogDefault("client", logger.LevelWarn),
 		config: &config.Client,
 	}
 
